@@ -16,4 +16,9 @@ export class UsersController {
     }
     
   }
+
+  @Post("sign-in")
+  async loginUser(@Body() body: CreateUserDto){
+    return this.usersService.loginUser(body)
+  }
 }

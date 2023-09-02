@@ -1,29 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { UsersRepositories } from './users.repositories';
 import * as bcrypt from "bcrypt"
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
 
   ROUND: number = 10
 
-  constructor(private readonly usersRepositories: UsersRepositories){}
+  constructor(
+    private readonly usersRepositories: UsersRepositories,
+    private readonly jwt: JwtService){}
 
   async create(body: CreateUserDto) {
-    const hashPassword = await bcrypt.hash(body.password,10)
+    const hashPassword = await bcrypt.hash(body.password,this.ROUND)
     await this.usersRepositories.create(body.email,hashPassword)
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async loginUser(body: CreateUserDto){
+    const user = await this.usersRepositories.findByEmail(body.email)
+    const isValid = await bcrypt.compare(body.password,user.password)
+    if(!isValid) throw new UnauthorizedException("invalid informations")
+    return {token: await this.jwt.sign({userId: user.id,email: user.email})}
+
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
 }
