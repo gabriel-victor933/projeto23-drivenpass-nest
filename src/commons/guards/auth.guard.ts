@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate {
         const token = request.headers.authorization?.split(" ")[1]
         if(!token) throw new UnauthorizedException("missing token")
         try {
-            const payload = await this.jwt.verifyAsync(token,{secret: "top_secret"})
+            const payload = await this.jwt.verifyAsync(token,{secret: process.env.SECRET})
             request['user'] = payload.userId
         } catch(err){
             throw new UnauthorizedException("Invalid token");

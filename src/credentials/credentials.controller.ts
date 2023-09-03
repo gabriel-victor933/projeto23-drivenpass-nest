@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, InternalServerErrorException, ConflictException } from '@nestjs/common';
 import { CredentialsService } from './credentials.service';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
@@ -11,8 +11,15 @@ export class CredentialsController {
   constructor(private readonly credentialsService: CredentialsService) {}
 
   @Post()
-  create(@Body() createCredentialDto: CreateCredentialDto) {
-    return this.credentialsService.create(createCredentialDto);
+  async create(@Body() createCredentialDto: CreateCredentialDto, @User() userId: number) {
+
+    try {
+      await this.credentialsService.create(createCredentialDto,userId);
+    } catch(err){
+      if(err.code == "P2002") throw new ConflictException("title already in use")
+      throw new InternalServerErrorException()
+    }
+    
   }
 
   
