@@ -33,8 +33,13 @@ export class CredentialsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCredentialDto: UpdateCredentialDto, @User() userId: number) {
-    return this.credentialsService.update(+id, updateCredentialDto,userId);
+  async update(@Param('id') id: string, @Body() updateCredentialDto: UpdateCredentialDto, @User() userId: number) {
+    try {
+      await this.credentialsService.update(+id, updateCredentialDto,userId);
+    } catch(err){
+      if(err.code == "P2002") throw new ConflictException("title already in use")
+      throw new InternalServerErrorException()
+    }
   }
 
   @Delete(':id')
