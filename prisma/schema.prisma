@@ -18,21 +18,23 @@ model User {
   notes Note[]
   cards Card[]
   wifis Wifi[]
+  licenses License[]
   @@map("users")
 }
 
 model Card {
   id Int @id @default(autoincrement())
-  title String @unique()
+  title String 
   number String
   name String
-  cvc String
+  cvv String
   expirationDate DateTime
   password String
   isVirtual Boolean
   type Type
   userId Int
   user User @relation(fields: [userId],references: [id])
+  @@unique([title,userId])
   @@map("cards")
 }
 
@@ -45,21 +47,22 @@ enum Type {
 model Credential {
   id Int @id @default(autoincrement())
   url String
-  title String @unique()
+  title String 
   username String
   password String
   userId Int
   user User @relation(fields: [userId],references: [id])
-
+  @@unique([title,userId])
   @@map("credentials")
 }
 
 model Note {
   id Int @id @default(autoincrement())
-  title String @unique()
+  title String 
   text String
   userId Int
   user User @relation(fields: [userId],references: [id])
+  @@unique([title,userId])
   @@map("notes")
 }
 
@@ -78,7 +81,9 @@ model License {
   software String 
   version String
   key String
-  @@unique([software,version])
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  @@unique([software,version,userId])
   @@map("licenses")
 }
 
