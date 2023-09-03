@@ -33,8 +33,8 @@ export class CredentialsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCredentialDto: UpdateCredentialDto) {
-    return this.credentialsService.update(+id, updateCredentialDto);
+  update(@Param('id') id: string, @Body() updateCredentialDto: UpdateCredentialDto, @User() userId: number) {
+    return this.credentialsService.update(+id, updateCredentialDto,userId);
   }
 
   @Delete(':id')

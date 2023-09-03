@@ -27,8 +27,10 @@ export class CredentialsService {
     return {...credential,password: this.cryptr.decrypt(credential.password)};
   }
 
-  update(id: number, updateCredentialDto: UpdateCredentialDto) {
-    return `This action updates a #${id} credential`;
+  async update(id: number, updateCredentialDto: UpdateCredentialDto, userId: number) {
+    await this.checkCredentials(id,userId)
+    if(updateCredentialDto.password) updateCredentialDto.password = this.cryptr.encrypt(updateCredentialDto.password)
+    return await this.credentialRepositories.updateOne(id,updateCredentialDto);
   }
 
   async remove(id: number,userId: number) {
