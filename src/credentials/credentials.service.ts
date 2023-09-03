@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
 import { CredentialsRepositories } from './credential.repositories';
@@ -15,19 +15,31 @@ export class CredentialsService {
     return await this.credentialRepositories.create({...createCredentialDto,password: encryptPassword},userId);
   }
 
-  findAll() {
-    return `This action returns all credentials`;
+  async findAll(userId: number) {
+    const credentials = await this.credentialRepositories.findAll(userId)
+    if(credentials.length === 0) throw new NotFoundException("credentials not found")
+    const decryptCredentials = credentials.map((cred) => ({...cred,password: this.cryptr.decrypt(cred.password)}))
+    return decryptCredentials;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} credential`;
+  async findOne(id: number,userId: number) {
+    const credential = await this.checkCredentials(id,userId)
+    return {...credential,password: this.cryptr.decrypt(credential.password)};
   }
 
   update(id: number, updateCredentialDto: UpdateCredentialDto) {
     return `This action updates a #${id} credential`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} credential`;
+  async remove(id: number,userId: number) {
+    await this.checkCredentials(id,userId)
+    return this.credentialRepositories.deleteOne(id,userId);
+  }
+
+  async checkCredentials(id: number,userId: number){
+    const credential = await this.credentialRepositories.findOne(id)
+    if(!credential) throw new NotFoundException("credential not found")
+    if(credential.userId !== userId) throw new ForbiddenException()
+    return credential
   }
 }

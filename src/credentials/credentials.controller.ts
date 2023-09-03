@@ -19,18 +19,17 @@ export class CredentialsController {
       if(err.code == "P2002") throw new ConflictException("title already in use")
       throw new InternalServerErrorException()
     }
-    
   }
 
   
   @Get()
-  findAll() {
-    return "ok";
+  async findAll( @User() userId: number) {
+    return this.credentialsService.findAll(userId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.credentialsService.findOne(+id);
+  findOne(@Param('id') id: string, @User() userId: number) {
+    return this.credentialsService.findOne(+id,userId);
   }
 
   @Patch(':id')
@@ -39,7 +38,7 @@ export class CredentialsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.credentialsService.remove(+id);
+  remove(@Param('id') id: string, @User() userId: number) {
+    this.credentialsService.remove(+id,userId);
   }
 }

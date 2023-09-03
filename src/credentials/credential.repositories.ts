@@ -11,4 +11,19 @@ export class CredentialsRepositories {
             data:{...createCredentialDto, userId}
         })
     }
+
+    findAll(userId: number){
+        return this.prisma.credential.findMany({
+            where: {userId}        })
+    }
+
+    findOne(id: number){
+        return this.prisma.credential.findUnique({where: {id}})
+    }
+
+    deleteOne(id: number, userId: number){
+        return this.prisma.credential.delete({
+            where:{id,userId}
+        })
+    }
 }
