@@ -55,7 +55,6 @@ describe('Users integration tests', () => {
 
   it("users sign-up should return OK and JWT token", async ()=>{
     const user = await testFactories.insertUserInDb()
-    console.log(user)
     const res = await request(app.getHttpServer()).post("/users/sign-in").send(user)
 
     expect(res.statusCode).toBe(201)
