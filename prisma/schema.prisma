@@ -33,7 +33,7 @@ model Card {
   isVirtual Boolean
   type Type
   userId Int
-  user User @relation(fields: [userId],references: [id])
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
   @@unique([title,userId])
   @@map("cards")
 }
@@ -51,7 +51,7 @@ model Credential {
   username String
   password String
   userId Int
-  user User @relation(fields: [userId],references: [id])
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
   @@unique([title,userId])
   @@map("credentials")
 }
@@ -61,7 +61,7 @@ model Note {
   title String 
   text String
   userId Int
-  user User @relation(fields: [userId],references: [id])
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
   @@unique([title,userId])
   @@map("notes")
 }
@@ -72,7 +72,7 @@ model Wifi {
   network String
   password String
   userId Int
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
   @@map("wifis")
 }
 
@@ -82,7 +82,7 @@ model License {
   version String
   key String
   userId Int
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
   @@unique([software,version,userId])
   @@map("licenses")
 }
