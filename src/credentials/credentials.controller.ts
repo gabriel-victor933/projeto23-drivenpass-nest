@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, InternalS
 import { CredentialsService } from './credentials.service';
 import { CreateCredentialDto } from './dto/create-credential.dto';
 import { UpdateCredentialDto } from './dto/update-credential.dto';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
-import {User} from "src/commons/decorators/users.decorator"
+import { AuthGuard } from '../commons/guards/auth.guard';
+import {User} from "../commons/decorators/users.decorator"
 
 @Controller('credentials')
 @UseGuards(AuthGuard)

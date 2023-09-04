@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException, I
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
-import { User } from 'src/commons/decorators/users.decorator';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
+import { User } from '../commons/decorators/users.decorator';
+import { AuthGuard } from '../commons/guards/auth.guard';
 
 @Controller('notes')
 @UseGuards(AuthGuard)

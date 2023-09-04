@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException, I
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
-import { User } from 'src/commons/decorators/users.decorator';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
+import { User } from '../commons/decorators/users.decorator';
+import { AuthGuard } from '../commons/guards/auth.guard';
 
 
 @Controller('cards')

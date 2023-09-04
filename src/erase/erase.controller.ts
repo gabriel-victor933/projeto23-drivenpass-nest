@@ -1,8 +1,8 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { EraseService } from './erase.service';
 import { EraseDto } from './dto/erase.dto';
-import { AuthGuard } from 'src/commons/guards/auth.guard';
-import { User } from 'src/commons/decorators/users.decorator';
+import { AuthGuard } from '../commons/guards/auth.guard';
+import { User } from '../commons/decorators/users.decorator';
 
 @Controller('erase')
 @UseGuards(AuthGuard)
