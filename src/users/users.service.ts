@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dtos/createUser.dto';
 import { UsersRepositories } from './users.repositories';
 import * as bcrypt from "bcrypt"
@@ -20,6 +20,7 @@ export class UsersService {
 
   async loginUser(body: CreateUserDto){
     const user = await this.usersRepositories.findByEmail(body.email)
+    if(!user) throw new NotFoundException()
     const isValid = await bcrypt.compare(body.password,user.password)
     if(!isValid) throw new UnauthorizedException("invalid informations")
     return {token: await this.jwt.sign({userId: user.id,email: user.email})}
