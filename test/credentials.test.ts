@@ -38,4 +38,57 @@ describe('App Integration Test', () => {
 
     expect(res.statusCode).toBe(400)
   });
+
+  it('POST /credentials should return CREATE', async () => {
+    const {token} = await testFactories.generateSubscription()
+    const credential =  testFactories.createCredentials()
+    const res = await request(app.getHttpServer())
+    .post("/credentials")
+    .set("Authorization",`Bearer ${token}`)
+    .send(credential)
+
+    expect(res.statusCode).toBe(201)
+  });
+
+  it('GET /credentials should return all credentials', async () => {
+    const {token} = await testFactories.generateSubscription()
+    const credential =  testFactories.createCredentials()
+    await request(app.getHttpServer())
+    .post("/credentials")
+    .set("Authorization",`Bearer ${token}`)
+    .send(credential)
+
+    const res = await request(app.getHttpServer()).get("/credentials").set("Authorization",`Bearer ${token}`)
+
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toHaveLength(1)
+    expect(res.body).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        url: expect.any(String),
+        title: expect.any(String),
+        username: expect.any(String),
+        password: expect.any(String)
+      })
+    ]))
+  });
+
+  it('GET /credentials/:id should return specific credential', async () => {
+    const {token} = await testFactories.generateSubscription()
+    const credential =  await testFactories.insertCredentialsInDb(token)
+
+
+    const res = await request(app.getHttpServer())
+    .get(`/credentials/${(credential).id}`)
+    .set("Authorization",`Bearer ${token}`)
+    console.log(res.body)
+    expect(res.statusCode).toBe(200)
+    expect(res.body).toEqual(expect.objectContaining({
+        url: expect.any(String),
+        title: expect.any(String),
+        username: expect.any(String),
+        password: expect.any(String)
+      })
+    )
+  });
+
 });
