@@ -59,4 +59,41 @@ export class TestFactories {
             data: {...credential,userId: payload.userId}
         })
     }
+
+    createNote(){
+        return {
+            title: faker.word.noun(),
+            text: faker.word.words({count: {min:3,max:10}})
+        }
+    }
+
+    async insertNoteInDb(token: string){
+        const payload = await this.jwt.verifyAsync(token,{secret: process.env.SECRET})
+        const note = this.createNote()
+        return await this.prisma.note.create({
+            data: {...note,userId: payload.userId}
+        })
+    }
+
+    createCard(){
+        return {
+            title: faker.word.noun(), 
+            number: faker.finance.creditCardNumber(),
+            name: faker.person.firstName(),
+            cvv: faker.finance.creditCardCVV(),
+            expirationDate: faker.date.future(),
+            password: faker.internet.password(),
+            isVirtual: true,
+            type: faker.helpers.arrayElement(['CREDIT',"DEBT",'BOTH']) as 'CREDIT' | 'DEBT' | 'BOTH'
+        }
+    }
+
+    async insertCardInDb(token: string){
+        const payload:{userId:number}  =  await this.jwt.verifyAsync(token,{secret: process.env.SECRET})
+        const card = this.createCard()
+        return await this.prisma.card.create({
+            data: {...card,userId: payload.userId}
+        })
+    }
 }
+

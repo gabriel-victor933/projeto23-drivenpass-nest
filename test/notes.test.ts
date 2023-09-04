@@ -22,70 +22,66 @@ describe('App Integration Test', () => {
 
   });
 
-  it('POST /credentials should return UNAUTHORIZED without token', async () => {
-    const res = await request(app.getHttpServer()).post("/credentials").send({})
+  it('POST /notes should return UNAUTHORIZED without token', async () => {
+    const res = await request(app.getHttpServer()).post("/notes").send({})
 
     expect(res.statusCode).toBe(401)
   });
 
-  it('POST /credentials should return BAD REQUEST without VALID BODY', async () => {
+  it('POST /notes should return BAD REQUEST without VALID BODY', async () => {
     const {token} = await testFactories.generateSubscription()
 
     const res = await request(app.getHttpServer())
-    .post("/credentials")
+    .post("/notes")
     .set("Authorization",`Bearer ${token}`)
     .send({})
 
     expect(res.statusCode).toBe(400)
   });
 
-  it('POST /credentials should return CREATE', async () => {
+  it('POST /notes should return CREATE', async () => {
     const {token} = await testFactories.generateSubscription()
-    const credential =  testFactories.createCredentials()
+    const note =  testFactories.createNote()
     const res = await request(app.getHttpServer())
-    .post("/credentials")
+    .post("/notes")
     .set("Authorization",`Bearer ${token}`)
-    .send(credential)
+    .send(note)
 
     expect(res.statusCode).toBe(201)
   });
 
-  it('GET /credentials should return all credentials', async () => {
+  it('GET /notes should return all credentials', async () => {
     const {token} = await testFactories.generateSubscription()
-    const credential =  testFactories.createCredentials()
+    const note =  testFactories.createNote()
     await request(app.getHttpServer())
-    .post("/credentials")
+    .post("/notes")
     .set("Authorization",`Bearer ${token}`)
-    .send(credential)
+    .send(note)
 
-    const res = await request(app.getHttpServer()).get("/credentials").set("Authorization",`Bearer ${token}`)
+    const res = await request(app.getHttpServer()).get("/notes").set("Authorization",`Bearer ${token}`)
 
     expect(res.statusCode).toBe(200)
     expect(res.body).toHaveLength(1)
     expect(res.body).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        url: expect.any(String),
         title: expect.any(String),
-        username: expect.any(String),
-        password: expect.any(String)
+        text: expect.any(String),
       })
     ]))
   });
 
-  it('GET /credentials/:id should return specific credential', async () => {
+  it('GET /notes/:id should return specific credential', async () => {
     const {token} = await testFactories.generateSubscription()
-    const credential =  await testFactories.insertCredentialsInDb(token)
+    const note =  await testFactories.insertNoteInDb(token)
 
 
     const res = await request(app.getHttpServer())
-    .get(`/credentials/${(credential).id}`)
+    .get(`/notes/${(note).id}`)
     .set("Authorization",`Bearer ${token}`)
     expect(res.statusCode).toBe(200)
     expect(res.body).toEqual(expect.objectContaining({
-        url: expect.any(String),
         title: expect.any(String),
-        username: expect.any(String),
-        password: expect.any(String)
+        text: expect.any(String),
       })
     )
   });
