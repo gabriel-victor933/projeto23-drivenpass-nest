@@ -78,10 +78,10 @@ export class TestFactories {
     createCard(){
         return {
             title: faker.word.noun(), 
-            number: faker.finance.creditCardNumber(),
+            number: faker.finance.creditCardNumber("visa"),
             name: faker.person.firstName(),
             cvv: faker.finance.creditCardCVV(),
-            expirationDate: faker.date.future(),
+            expirationDate: "12/27",
             password: faker.internet.password(),
             isVirtual: true,
             type: faker.helpers.arrayElement(['CREDIT',"DEBT",'BOTH']) as 'CREDIT' | 'DEBT' | 'BOTH'
@@ -91,8 +91,14 @@ export class TestFactories {
     async insertCardInDb(token: string){
         const payload:{userId:number}  =  await this.jwt.verifyAsync(token,{secret: process.env.SECRET})
         const card = this.createCard()
+        card.cvv = this.cryptr.encrypt(card.cvv)
+        card.password = this.cryptr.encrypt(card.password)
+        
         return await this.prisma.card.create({
-            data: {...card,userId: payload.userId}
+            data: {...card,
+                userId: payload.userId,
+                expirationDate: new Date(parseInt("20"+card.expirationDate.slice(-2)),parseInt(card.expirationDate.slice(0,2))-1),
+            }
         })
     }
 }

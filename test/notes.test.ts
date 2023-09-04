@@ -6,7 +6,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { TestFactories } from './factories';
 import { JwtModule } from '@nestjs/jwt';
 
-describe('App Integration Test', () => {
+describe('Notes Integration Test', () => {
   let app: INestApplication;
   let prisma: PrismaService = new PrismaService()
   let testFactories: TestFactories = new TestFactories(prisma)
