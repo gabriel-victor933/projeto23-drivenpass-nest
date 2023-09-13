@@ -8,9 +8,10 @@ import { NotesModule } from './notes/notes.module';
 import { CardsModule } from './cards/cards.module';
 import { EraseModule } from './erase/erase.module';
 import { WifisModule } from './wifis/wifis.module';
+import { LicensesModule } from './licenses/licenses.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, CredentialsModule, NotesModule, CardsModule, EraseModule, WifisModule],
+  imports: [PrismaModule, UsersModule, CredentialsModule, NotesModule, CardsModule, EraseModule, WifisModule, LicensesModule],
   controllers: [AppController],
   providers: [AppService],
 })
