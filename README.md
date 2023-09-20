@@ -10,6 +10,12 @@
 
 O DrivenPass é um gerenciador de senhas implementado usando o NodeJs juntamente com o framewok NestJS.
 
+## Stack 
+ - NodeJs
+ - NestJs
+ - PrismaORM
+ - Typescript
+
 ## Installation
 
 ```bash
