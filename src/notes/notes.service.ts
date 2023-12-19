@@ -12,7 +12,9 @@ export class NotesService {
   }
 
   async findAll(userId: number) {
-    return await this.notesRepositories.findAll(userId);
+    const notes = await this.notesRepositories.findAll(userId);
+    if(notes.length ==0) throw new NotFoundException("Notes Not Found!")
+    return notes
   }
 
   async findOne(id: number,userId: number) {
