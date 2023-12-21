@@ -1,34 +1,40 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma/prisma.service";
-import { CreateNoteDto } from "./dto/create-note.dto";
-import { UpdateNoteDto } from "./dto/update-note.dto";
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateNoteDto } from './dto/create-note.dto';
+import { UpdateNoteDto } from './dto/update-note.dto';
 
 @Injectable()
 export class NotesRepositories {
-    constructor(private readonly prisma: PrismaService){}
+  constructor(private readonly prisma: PrismaService) {}
 
-    create(createNoteDto: CreateNoteDto, userId: number){
-        return this.prisma.note.create({
-            data: {...createNoteDto, userId}
-        })
-    }
+  create(createNoteDto: CreateNoteDto, userId: number) {
+    return this.prisma.note.create({
+      data: { ...createNoteDto, userId },
+    });
+  }
 
-    findAll(userId: number){
-        return this.prisma.note.findMany({where: {userId}})
-    }
+  findAll(userId: number) {
+    return this.prisma.note.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        title: true,
+      },
+    });
+  }
 
-    findOne(id: number){
-        return this.prisma.note.findUnique({where: {id}})
-    }
+  findOne(id: number) {
+    return this.prisma.note.findUnique({ where: { id } });
+  }
 
-    delete(id: number){
-        return this.prisma.note.delete({where: {id}})
-    }
+  delete(id: number) {
+    return this.prisma.note.delete({ where: { id } });
+  }
 
-    updateOne(id: number, updateNoteDto: UpdateNoteDto){
-        return this.prisma.note.update({
-            where: {id},
-            data: updateNoteDto
-        })
-    }
+  updateOne(id: number, updateNoteDto: UpdateNoteDto) {
+    return this.prisma.note.update({
+      where: { id },
+      data: updateNoteDto,
+    });
+  }
 }

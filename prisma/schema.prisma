@@ -78,6 +78,7 @@ model Wifi {
 
 model License {
   id Int @id @default(autoincrement())
+  title String
   software String 
   version String
   key String

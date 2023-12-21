@@ -16,6 +16,10 @@ export class LicensesRepositories {
   findAll(userId: number) {
     return this.prisma.license.findMany({
       where: { userId },
+      select: {
+        id: true,
+        title: true,
+      },
     });
   }
 

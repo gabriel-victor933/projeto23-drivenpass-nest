@@ -15,7 +15,11 @@ export class CredentialsRepositories {
 
     findAll(userId: number){
         return this.prisma.credential.findMany({
-            where: {userId}        })
+            where: {userId},
+            select: {
+              id: true,
+              title: true,
+            },        })
     }
 
     findOne(id: number){
