@@ -12,6 +12,7 @@ export class CardsRepositories {
       data: {
         ...createCardsDto,
         userId: userId,
+        number: parseInt(createCardsDto.number),
         expirationDate: new Date(
           parseInt('20' + createCardsDto.expirationDate.slice(-2)),
           parseInt(createCardsDto.expirationDate.slice(0, 2)) - 1,
@@ -39,11 +40,15 @@ export class CardsRepositories {
   }
 
   update(id: number, updateCardDto: UpdateCardDto) {
-    if (updateCardDto.expirationDate) {
+    const data: any = updateCardDto;
+
+    if (data.number) data.number = parseInt(data.number);
+
+    if (data.expirationDate) {
       return this.prisma.card.update({
         where: { id },
         data: {
-          ...updateCardDto,
+          ...data,
           expirationDate: new Date(
             parseInt('20' + updateCardDto.expirationDate.slice(-2)),
             parseInt(updateCardDto.expirationDate.slice(0, 2)) - 1,
@@ -54,7 +59,7 @@ export class CardsRepositories {
 
     return this.prisma.card.update({
       where: { id },
-      data: updateCardDto,
+      data: data,
     });
   }
 }

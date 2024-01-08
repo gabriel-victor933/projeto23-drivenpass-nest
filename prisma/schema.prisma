@@ -25,7 +25,7 @@ model User {
 model Card {
   id Int @id @default(autoincrement())
   title String 
-  number String
+  number BigInt
   name String
   cvv String
   expirationDate DateTime

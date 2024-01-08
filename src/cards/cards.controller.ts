@@ -1,10 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ConflictException, InternalServerErrorException, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ConflictException,
+  InternalServerErrorException,
+  UseGuards,
+} from '@nestjs/common';
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { User } from '../commons/decorators/users.decorator';
 import { AuthGuard } from '../commons/guards/auth.guard';
-
 
 @Controller('cards')
 @UseGuards(AuthGuard)
@@ -14,10 +24,10 @@ export class CardsController {
   @Post()
   async create(@Body() createCardDto: CreateCardDto, @User() userId: number) {
     try {
-      await this.cardsService.create(createCardDto,userId);
-    } catch(err){
-      if(err.code === "P2002") throw new ConflictException();
-      throw new InternalServerErrorException()
+      await this.cardsService.create(createCardDto, userId);
+    } catch (err) {
+      if (err.code === 'P2002') throw new ConflictException();
+      throw new InternalServerErrorException();
     }
   }
 
@@ -27,22 +37,27 @@ export class CardsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @User() userId: number) {
-    return this.cardsService.findOne(+id,userId);
+  async findOne(@Param('id') id: string, @User() userId: number) {
+    const card = await this.cardsService.findOne(+id, userId);
+    return { ...card, number: card.number.toString() };
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto,@User() userId: number) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateCardDto: UpdateCardDto,
+    @User() userId: number,
+  ) {
     try {
-      await this.cardsService.update(+id, updateCardDto,userId);
-    } catch(err){
-      if(err.code === "P2002") throw new ConflictException();
-      throw new InternalServerErrorException()
+      await this.cardsService.update(+id, updateCardDto, userId);
+    } catch (err) {
+      if (err.code === 'P2002') throw new ConflictException();
+      throw new InternalServerErrorException();
     }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string,@User() userId: number) {
-     this.cardsService.remove(+id,userId);
+  remove(@Param('id') id: string, @User() userId: number) {
+    this.cardsService.remove(+id, userId);
   }
 }
