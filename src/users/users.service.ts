@@ -1,30 +1,15 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { CreateUserDto } from './dtos/createUser.dto';
-import { UsersRepositories } from './users.repositories';
-import * as bcrypt from "bcrypt"
-import { JwtService } from '@nestjs/jwt';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { RegisterRepositories } from '../register/register.repositories';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsersService {
-
-  ROUND: number = 10
-
-  constructor(
-    private readonly usersRepositories: UsersRepositories,
-    private readonly jwt: JwtService){}
-
-  async create(body: CreateUserDto) {
-    const hashPassword = await bcrypt.hash(body.password,this.ROUND)
-    await this.usersRepositories.create(body.email,hashPassword)
+export class UsersServices {
+  constructor(private readonly registerRepositories: RegisterRepositories) {}
+  RegisterRepositories;
+  async deleteAccount(password: string, userId: number) {
+    const user = await this.registerRepositories.findById(userId);
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) throw new UnauthorizedException('invalid password');
+    await this.registerRepositories.deleteAll(userId);
   }
-
-  async loginUser(body: CreateUserDto){
-    const user = await this.usersRepositories.findByEmail(body.email)
-    if(!user) throw new NotFoundException()
-    const isValid = await bcrypt.compare(body.password,user.password)
-    if(!isValid) throw new UnauthorizedException("invalid informations")
-    return {token: await this.jwt.sign({userId: user.id,email: user.email})}
-
-  }
-
 }
