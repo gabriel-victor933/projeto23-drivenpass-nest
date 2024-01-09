@@ -15,7 +15,7 @@ export class CreateCardDto {
     @Length(3)
     cvv:  string
     @ApiProperty()
-    @Matches('^[0-9]{2}/[0-9]{2}$')
+    @Matches('^[0-9]{4}/[0-9]{2}$')
     expirationDate:  string
     @ApiProperty()
     @IsString()
