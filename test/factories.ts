@@ -86,7 +86,7 @@ export class TestFactories {
   createCard() {
     return {
       title: faker.word.noun(),
-      number: faker.number.bigInt(),
+      number: faker.finance.creditCardNumber(),
       name: faker.person.firstName(),
       cvv: faker.finance.creditCardCVV(),
       expirationDate: '2027/12',
@@ -111,6 +111,7 @@ export class TestFactories {
       data: {
         ...card,
         userId: payload.userId,
+        number: parseInt(card.number),
         expirationDate: new Date(
           parseInt('20' + card.expirationDate.slice(-2)),
           parseInt(card.expirationDate.slice(0, 2)) - 1,

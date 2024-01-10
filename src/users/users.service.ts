@@ -18,7 +18,7 @@ export class UsersServices {
   }
 
   async passwordCount(userId: number) {
-    const response =  await this.usersRepositories.passwordCount(userId);
-    return response._count
+    const response = await this.usersRepositories.passwordCount(userId);
+    return response._count;
   }
 }

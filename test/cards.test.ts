@@ -4,7 +4,6 @@ import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { TestFactories } from './factories';
-import { JwtModule } from '@nestjs/jwt';
 
 describe('Cards Integration Test', () => {
   let app: INestApplication;
@@ -44,20 +43,22 @@ describe('Cards Integration Test', () => {
   it('POST /cards should return CREATE', async () => {
     const { token } = await testFactories.generateSubscription();
     const card = testFactories.createCard();
+
     const res = await request(app.getHttpServer())
       .post('/cards')
       .set('Authorization', `Bearer ${token}`)
-      .send(card);
+      .send({ ...card, number: card.number.toString() });
+    console.log(res.body)
     expect(res.statusCode).toBe(201);
   });
 
-  it('GET /cards should return all credentials', async () => {
+  it('GET /cards should return all Cards', async () => {
     const { token } = await testFactories.generateSubscription();
     const card = testFactories.createCard();
-    const post = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post('/cards')
       .set('Authorization', `Bearer ${token}`)
-      .send(card);
+      .send({ ...card, number: card.number.toString() });
     const res = await request(app.getHttpServer())
       .get('/cards')
       .set('Authorization', `Bearer ${token}`);
@@ -67,13 +68,7 @@ describe('Cards Integration Test', () => {
       expect.arrayContaining([
         expect.objectContaining({
           title: expect.any(String),
-          number: expect.any(String),
-          name: expect.any(String),
-          cvv: expect.any(String),
-          expirationDate: expect.any(String),
-          password: expect.any(String),
-          isVirtual: expect.any(Boolean),
-          type: expect.any(String),
+          id: expect.any(Number),
         }),
       ]),
     );

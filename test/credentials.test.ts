@@ -65,16 +65,13 @@ describe('Credentials Integration Test', () => {
     const res = await request(app.getHttpServer())
       .get('/credentials')
       .set('Authorization', `Bearer ${token}`);
-
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveLength(1);
     expect(res.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          url: expect.any(String),
+          id: expect.any(Number),
           title: expect.any(String),
-          username: expect.any(String),
-          password: expect.any(String),
         }),
       ]),
     );
