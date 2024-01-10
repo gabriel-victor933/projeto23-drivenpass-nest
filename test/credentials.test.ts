@@ -43,6 +43,17 @@ describe('Credentials Integration Test', () => {
     expect(res.statusCode).toBe(400);
   });
 
+  it('POST /credentials should return CONFLICT if title is already in use', async () => {
+    const { token } = await testFactories.generateSubscription();
+    const credential = await testFactories.insertCredentialsInDb(token);
+
+    const res = await request(app.getHttpServer())
+      .post('/credentials')
+      .set('Authorization', `Bearer ${token}`)
+      .send(credential);
+    expect(res.statusCode).toBe(409);
+  });
+
   it('POST /credentials should return CREATE', async () => {
     const { token } = await testFactories.generateSubscription();
     const credential = testFactories.createCredentials();
@@ -52,6 +63,16 @@ describe('Credentials Integration Test', () => {
       .send(credential);
 
     expect(res.statusCode).toBe(201);
+  });
+
+  it('GET /credentials should return NOT FOUND if there is no card', async () => {
+    const { token } = await testFactories.generateSubscription();
+
+    const res = await request(app.getHttpServer())
+      .get('/credentials')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(404);
   });
 
   it('GET /credentials should return all credentials', async () => {

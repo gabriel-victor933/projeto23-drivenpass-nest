@@ -48,8 +48,18 @@ describe('Wifis Integration Test', () => {
       .post('/wifis')
       .set('Authorization', `Bearer ${token}`)
       .send(wifi);
-    console.log(res.body)
+
     expect(res.statusCode).toBe(201);
+  });
+
+  it('GET /wifis should return NOT FOUND if there is no card', async () => {
+    const { token } = await testFactories.generateSubscription();
+
+    const res = await request(app.getHttpServer())
+      .get('/wifis')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(404);
   });
 
   it('GET /wifi should return all Wifis', async () => {

@@ -41,6 +41,17 @@ describe('Notes Integration Test', () => {
     expect(res.statusCode).toBe(400);
   });
 
+  it('POST /notes should return CONFLICT if title is already in use', async () => {
+    const { token } = await testFactories.generateSubscription();
+    const note = await testFactories.insertNoteInDb(token);
+
+    const res = await request(app.getHttpServer())
+      .post('/notes')
+      .set('Authorization', `Bearer ${token}`)
+      .send(note);
+    expect(res.statusCode).toBe(409);
+  });
+
   it('POST /notes should return CREATE', async () => {
     const { token } = await testFactories.generateSubscription();
     const note = testFactories.createNote();
@@ -50,6 +61,16 @@ describe('Notes Integration Test', () => {
       .send(note);
 
     expect(res.statusCode).toBe(201);
+  });
+
+  it('GET /notes should return NOT FOUND if there is no card', async () => {
+    const { token } = await testFactories.generateSubscription();
+
+    const res = await request(app.getHttpServer())
+      .get('/notes')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(404);
   });
 
   it('GET /notes should return all Notes', async () => {

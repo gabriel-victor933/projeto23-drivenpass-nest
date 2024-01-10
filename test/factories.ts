@@ -88,7 +88,7 @@ export class TestFactories {
   createCard() {
     return {
       title: faker.word.noun(),
-      number: faker.finance.creditCardNumber(),
+      number: faker.finance.creditCardNumber('visa'),
       name: faker.person.firstName(),
       cvv: faker.finance.creditCardCVV(),
       expirationDate: '2027/12',
@@ -106,7 +106,7 @@ export class TestFactories {
     const card = this.createCard();
     card.cvv = this.cryptr.encrypt(card.cvv);
     card.password = this.cryptr.encrypt(card.password);
-    
+
     return await this.prisma.card.create({
       data: {
         ...card,
@@ -134,6 +134,26 @@ export class TestFactories {
     return await this.prisma.wifi.create({
       data: {
         ...wifi,
+        userId: payload.userId,
+      },
+    });
+  }
+
+  createLicense() {
+    return {
+      title: faker.word.noun(),
+      software: faker.commerce.productName(),
+      version: faker.number.int().toString(),
+      key: faker.internet.password(),
+    };
+  }
+
+  async insertLicenseInDb(token: string) {
+    const payload = await this.verifyToken(token);
+    const license = this.createLicense();
+    return await this.prisma.license.create({
+      data: {
+        ...license,
         userId: payload.userId,
       },
     });
