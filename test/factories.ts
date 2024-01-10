@@ -46,6 +46,12 @@ export class TestFactories {
     };
   }
 
+  async verifyToken(token: string) {
+    return this.jwt.verifyAsync(token, {
+      secret: process.env.SECRET,
+    });
+  }
+
   createCredentials() {
     return {
       url: faker.internet.url(),
@@ -56,9 +62,7 @@ export class TestFactories {
   }
 
   async insertCredentialsInDb(token: string) {
-    const payload = await this.jwt.verifyAsync(token, {
-      secret: process.env.SECRET,
-    });
+    const payload = await this.verifyToken(token);
     const credential = this.createCredentials();
     credential.password = this.cryptr.encrypt(credential.password);
     return await this.prisma.credential.create({
@@ -74,9 +78,7 @@ export class TestFactories {
   }
 
   async insertNoteInDb(token: string) {
-    const payload = await this.jwt.verifyAsync(token, {
-      secret: process.env.SECRET,
-    });
+    const payload = await this.verifyToken(token);
     const note = this.createNote();
     return await this.prisma.note.create({
       data: { ...note, userId: payload.userId },
@@ -100,13 +102,11 @@ export class TestFactories {
   }
 
   async insertCardInDb(token: string) {
-    const payload: { userId: number } = await this.jwt.verifyAsync(token, {
-      secret: process.env.SECRET,
-    });
+    const payload = await this.verifyToken(token);
     const card = this.createCard();
     card.cvv = this.cryptr.encrypt(card.cvv);
     card.password = this.cryptr.encrypt(card.password);
-
+    
     return await this.prisma.card.create({
       data: {
         ...card,
@@ -116,6 +116,25 @@ export class TestFactories {
           parseInt('20' + card.expirationDate.slice(-2)),
           parseInt(card.expirationDate.slice(0, 2)) - 1,
         ),
+      },
+    });
+  }
+
+  createWifi() {
+    return {
+      title: faker.word.noun(),
+      network: faker.internet.mac(),
+      password: faker.internet.password(),
+    };
+  }
+
+  async insertWifiInDb(token: string) {
+    const payload = await this.verifyToken(token);
+    const wifi = this.createWifi();
+    return await this.prisma.wifi.create({
+      data: {
+        ...wifi,
+        userId: payload.userId,
       },
     });
   }

@@ -16,6 +16,7 @@
     "test:int": "npm run test:load -- jest -- --watch --runInBand  --config ./test/jest-int.json",
     "test:load": "dotenv -e .env.test",
     "test:migrate": "npm run test:load prisma migrate deploy",
+    "test:coverage": "npm run test:load -- jest -- --coverage --runInBand  --config ./test/jest-int.json",
     "migrate:dev": "npx prisma migrate dev",
     "migrate:dev:create": "npx prisma migrate dev --create-only",
     "migrate:deploy": "npx prisma migrate deploy",
