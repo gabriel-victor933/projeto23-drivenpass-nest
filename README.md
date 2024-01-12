@@ -55,6 +55,11 @@
 [![](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)]()
 [![](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)]()
 
+## Deploy
+
+- Clique <a href="https://project-drivenpass-front.vercel.app/">aqui</a> para acessar o Deploy.
+- Clique <a href="https://github.com/gabriel-victor933/project-drivenpass-front">aqui</a> para verificar o repositório do Front-end. 
+
 ## Como Rodar
 1. Clone esse repositório;
 2. Crie uma arquivo `.env` e insera as seguintes variavéis;
